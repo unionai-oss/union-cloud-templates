@@ -72,7 +72,7 @@ docker push <tag>
 
 | ℹ️ **Note** |
 |------|
-| Your Docker container in the [github repo packages](https://github.com/unionai-oss/union-cloud-templates/pkgs/container/union-cloud-templates) section is set to publicly visible. |
+| The default docker container in the [github repo packages](https://github.com/unionai-oss/union-cloud-templates/pkgs/container/union-cloud-templates) section is set to publicly visible. |
 
 
 Register the workflows:
