@@ -1,0 +1,96 @@
+# Onboarding Project
+
+This project contains a template Flyte project that can be used out-of-the-box
+with a Flyte cluster hosted on [Union Cloud](https://www.union.ai/cloud).
+
+This project template serves as a beginner-level entrypoint to learning how
+to:
+
+1. Develop workflows in Flyte locally.
+2. Deploy them to a Union-Cloud-hosted Flyte cluster.
+3. Integrate the deployment process into your CI/CD via Github Actions
+
+The high-level structure of this project is as follows:
+
+```
+.
+├── Dockerfile               # Docker image for the project
+├── LICENSE
+├── README.md
+├── docker_build_and_tag.sh  # convenience script to build docker image
+├── requirements.txt         # project requirements
+├── setup.py                 # project package spec
+├── tutorial.ipynb           # hands-on tutorial
+└── workflows                # workflow source code
+```
+
+
+## Setup
+
+First clone the repo:
+
+```bash
+git clone https://github.com/unionai-oss/union-cloud-templates
+cd union-cloud-templates/onboarding
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv ~/venvs/ucloud-onboarding
+source ~/venvs/ucloud-onboarding/bin/activate
+pip install -e .
+```
+
+| ℹ️ **Note** |
+|------|
+| This project depends on `flytekit`, which supports Python 3.7 - 3.10 |
+
+
+### Union Cloud Setup
+
+Create a new project:
+
+```
+~/bin/uctl create project \
+    --id "onboarding" \
+    --labels "my-label=onboarding" \
+    --description "project for Union Cloud onboarding" \
+    --name "onboarding"
+```
+
+Build and push docker:
+
+```bash
+./docker_build.sh
+docker login ghcr.io
+```
+
+Register
+
+
+## Workflows
+
+The `workflows` directory contains a suite of tasks and workflows that
+demonstrates the core functionality of Flyte:
+
+| Module | Description |
+|--------|-------------|
+| `example_00_intro.py` | a basic model training example. |
+| `example_01_dynamic.py` | define execution graphs dynamically at runtime. |
+| `example_02_map_task.py` | use map tasks to scale embarrassingly parallel tasks. |
+| `example_03_plugins.py` | use plugins to leverage third-party integrations. |
+| `example_04_type_system.py` | use type annotations for type-safety and to facilitate data passing. |
+| `example_05_pandera_types.py` | validate tabular data at runtime. |
+| `example_06_reproducibility.py` | code- and resource-level reproducibility. |
+| `example_07_caching.py` | cache outputs of tasks to save compute resources. |
+| `example_08_recover_executions.py` | pick up an execution where you left off. |
+| `example_09_checkpointing.py` | checkpoint training progress within a task. |
+| `example_10_flyte_decks.py` | create rich static reports associated with your tasks. |
+| `example_11_extend_flyte_decks.py` | write your own visualizations/reports. |
+
+## Tutorial
+
+Follow the `tutorial.ipynb` notebook, which will take you through all the above
+modules with explanations and examples of how to run each example directly from
+a Jupyter runtime.
