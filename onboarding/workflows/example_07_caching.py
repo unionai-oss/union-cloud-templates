@@ -49,7 +49,7 @@ def split_data(
     limits=Resources(cpu="2", mem="1Gi"),
 )
 def train_model(
-    data: pd.DataFrame, hyperparameters: Hyperparameters
+    data: CachedDataFrame, hyperparameters: Hyperparameters
 ) -> SGDClassifier:
     print(f"training with hyperparameters: {hyperparameters}")
     return SGDClassifier(**asdict(hyperparameters)).fit(

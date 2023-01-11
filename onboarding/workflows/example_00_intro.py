@@ -8,7 +8,7 @@ https://pypi.org/project/palmerpenguins/
 """
 
 from dataclasses import dataclass, asdict
-from typing import Tuple
+from typing import Optional, Tuple
 
 import pandas as pd
 from dataclasses_json import dataclass_json
@@ -38,7 +38,7 @@ FEATURES = [
 @dataclass
 class Hyperparameters:
     C: float
-    max_iter: int
+    max_iter: Optional[int]
 
 
 @task
@@ -101,7 +101,7 @@ training_launchplan = LaunchPlan.create(
     schedule=CronSchedule(schedule="*/2 * * * *"),
 
     # use default inputs
-    default_inputs={"hyperparameters": {"C": 0.1, "max_iter": 1000}},
+    default_inputs={"hyperparameters": Hyperparameters(C=0.1, max_iter=1000)},
 )
 
 

@@ -1,6 +1,6 @@
 """Flyte Intro: Grid search Map Tasks."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import List, Tuple, NamedTuple
 
 import pandas as pd
@@ -35,13 +35,13 @@ class TrainArgs:
 def train_model(train_args: TrainArgs) -> LogisticRegression:
     """This is a unary task function for our model to make it mappable"""
     data: pd.DataFrame = train_args.data.open(pd.DataFrame).all()
-    model = LogisticRegression(max_iter=5000, **train_args.hyperparameters)
+    model = LogisticRegression(**asdict(train_args.hyperparameters))
     return model.fit(data[FEATURES], data[TARGET])
 
 
 @task
 def prepare_train_args(
-    train_data: StructuredDataset, hyperparam_grid: List[dict]
+    train_data: StructuredDataset, hyperparam_grid: List[Hyperparameters]
 ) -> List[TrainArgs]:
     """👜 We then create a task to create a list of TrainArgs to map over."""
     return [TrainArgs(train_data, hp) for hp in hyperparam_grid]

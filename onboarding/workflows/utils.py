@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from flytekit.configuration import Config
 from flytekit.remote import FlyteRemote, FlyteWorkflowExecution
 
@@ -9,8 +10,14 @@ def get_remote(local=None):
     else:
         is_sandbox = not local
     return FlyteRemote(
-        config=Config.auto(config_file=None if is_sandbox else "./config.yaml"),
-        default_project="flytesnacks",
+        config=Config.auto(
+            config_file=(
+                None
+                if is_sandbox
+                else str(Path.home() / ".uctl" / "config.yaml")
+            )
+        ),
+        default_project="onboarding",
         default_domain="development",
     )
 

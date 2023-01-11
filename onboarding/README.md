@@ -49,6 +49,9 @@ pip install -e .
 
 ### Union Cloud Setup
 
+These instructions are for setting up a project and registering workflows on
+a playground cluster, which assumes that docker images are publis
+
 Create a new project:
 
 ```
@@ -64,9 +67,22 @@ Build and push docker:
 ```bash
 ./docker_build.sh
 docker login ghcr.io
+docker push <tag>
 ```
 
-Register
+| ℹ️ **Note** |
+|------|
+| Your Docker container in the [github repo packages](https://github.com/unionai-oss/union-cloud-templates/pkgs/container/union-cloud-templates) section is set to publicly visible. |
+
+
+Register the workflows:
+
+```bash
+pyflyte --config ~/.uctl/config.yaml \
+    register workflows \
+    --project onboarding \
+    --image ghcr.io/unionai-oss/union-cloud-templates:onboarding-latest
+```
 
 
 ## Workflows
@@ -94,3 +110,19 @@ demonstrates the core functionality of Flyte:
 Follow the `tutorial.ipynb` notebook, which will take you through all the above
 modules with explanations and examples of how to run each example directly from
 a Jupyter runtime.
+
+Create a jupyter kernel for your virtual environment:
+
+```bash
+pip install ipykernel
+python -m ipykernel install --user --name ucloud-onboarding --display-name ucloud-onboarding
+```
+
+## Testing
+
+### Running Unit Tests
+
+```bash
+pip install pytest
+pytest tests/unit
+```
