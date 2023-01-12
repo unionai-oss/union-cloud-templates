@@ -1,19 +1,14 @@
-import os
 from pathlib import Path
 from flytekit.configuration import Config
 from flytekit.remote import FlyteRemote, FlyteWorkflowExecution
 
 
-def get_remote(local=None):
-    if local is None:
-        is_sandbox = os.environ.get("UNION_SANDBOX_PLACEHOLDER_SERVICE_HOST") is not None
-    else:
-        is_sandbox = not local
+def get_remote(local=None, config_file=None):
     return FlyteRemote(
         config=Config.auto(
             config_file=(
-                None
-                if is_sandbox
+                None if not local
+                else config_file if config_file is not None
                 else str(Path.home() / ".uctl" / "config.yaml")
             )
         ),

@@ -1,43 +1,34 @@
 """Unit tests for Flyte workflows."""
 
-from typing import Any, Callable, Dict, NamedTuple, Tuple, Type
-
 import pytest
-from sklearn.linear_model import LogisticRegression
 
-from workflows import (
-    example_00_intro,
-    example_01_dynamic,
-    example_02_map_task,
-    example_03_plugins,
-    example_04_type_system,
-    example_05_pandera_types,
-    example_06_reproducibility,
-    example_07_caching,
-    example_08_recover_executions,
-    example_09_checkpointing,
-    example_10_flyte_decks,
-    example_11_extend_flyte_decks,
-)
+from unittest.mock import patch
+
+from tests.common import WorkflowCase, WORKFLOW_CASES
 
 
-class WorkflowCase(NamedTuple):
-    workflow: Callable
-    inputs: Dict[str, Any]
-    expected_output_types: Tuple[Type, ...]
+def _is_namedtuple(type_):
+    try:
+        return issubclass(type_, tuple) and hasattr(type_, "_fields")
+    except TypeError:
+        return False
 
 
-@pytest.mark.parametrize(
-    "wf_case",
-    [
-        WorkflowCase(
-            workflow=example_00_intro.training_workflow,
-            inputs={"hyperparameters": example_00_intro.Hyperparameters(C=0.1, max_iter=5000)},
-            expected_output_types=(LogisticRegression, float, float),
-        ),
-    ]
-)
-def test_workflow(wf_case: WorkflowCase):
+
+@pytest.mark.parametrize("wf_case", WORKFLOW_CASES)
+@patch("workflows.example_08_recover_executions.FAILURE_RATE", 0.0)
+@patch("workflows.example_09_checkpointing.FAILURE_RATE", 0.0)
+def test_workflow(wf_case: WorkflowCase, *_):
     output = wf_case.workflow(**wf_case.inputs)
-    for output, expected_type in zip(output, wf_case.expected_output_types):
-        assert isinstance(output, expected_type)
+    if wf_case.expected_output_types is None:
+        return
+    elif _is_namedtuple(wf_case.expected_output_types):
+        # handle named tuple case
+        assert wf_case.expected_output_types(*output)
+    elif isinstance(wf_case.expected_output_types, tuple):
+        for output, expected_type in zip(output, wf_case.expected_output_types):
+            if not expected_type:
+                return
+            assert isinstance(output, expected_type)
+    else:
+        assert isinstance(output, wf_case.expected_output_types)

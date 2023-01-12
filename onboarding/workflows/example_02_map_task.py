@@ -18,7 +18,7 @@ from workflows.example_00_intro import (
     TARGET,
     Hyperparameters,
 )
-from workflows.example_01_dynamic import get_best_model
+from workflows.example_01_dynamic import get_best_model, TuningResults
 
 
 @dataclass_json
@@ -75,13 +75,7 @@ def tuning_workflow(
     val_size: float = 0.2,
     test_size: float = 0.2,
     random_state: int = 42,
-) -> NamedTuple(
-    "TuningResults",
-    best_model=LogisticRegression,
-    best_val_acc=float,
-    train_acc=float,
-    test_acc=float,
-):
+) -> TuningResults:
 
     # get and split data
     data = get_data()

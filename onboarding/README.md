@@ -122,7 +122,22 @@ python -m ipykernel install --user --name ucloud-onboarding --display-name uclou
 
 ### Running Unit Tests
 
+Run the tests locally so that you can make sure 
+
 ```bash
-pip install pytest
+pip install pytest pytest-xdist
 pytest tests/unit
+```
+
+
+### Running End to End Tests
+
+You can run end to end tests on the Union Cloud backend, assuming that you have
+your `~/.uctl/config.yaml` file configured correctly.
+
+The following will run all of the workflows in your backend to make sure they
+work with the expected input.
+
+```bash
+pytest tests/end_to_end -n auto
 ```

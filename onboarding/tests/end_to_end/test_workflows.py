@@ -5,11 +5,21 @@ NOTE: This script assumes that:
 2. The workflows are registered in the cluster.
 """
 
+import logging
+
 from flytekit.remote import FlyteRemote
 from flytekit.configuration import Config
 from pathlib import Path
 
-from workflows.example_00_intro import Hyperparameters
+import pytest
+
+from tests.common import WorkflowCase, WORKFLOW_CASES
+
+
+logger = logging.getLogger(__name__)
+
+
+SUCCEED_STATUS = 4
 
 
 remote = FlyteRemote(
@@ -18,25 +28,12 @@ remote = FlyteRemote(
     default_domain="development",
 )
 
-WORKFLOWS = [
-    (
-        "workflows.example_00_intro.training_workflow",
-        {"hyperparameters": Hyperparameters(C=0.1, max_iter=5000)},
-    )
-]
 
-
-def run_workflow(wf_name: str, inputs: dict):
-    flyte_wf = remote.fetch_workflow(name=wf_name)
-    execution = remote.execute(flyte_wf, inputs=inputs)
+@pytest.mark.parametrize("wf_case", WORKFLOW_CASES)
+def test_workflow_remote(wf_case: WorkflowCase):
+    flyte_wf = remote.fetch_workflow(name=wf_case.workflow.name)
+    execution = remote.execute(flyte_wf, inputs=wf_case.inputs)
     url = remote.generate_console_url(execution)
-    print(f"Running workflow execution in: {url}")
-
-
-def run_all():
-    for wf_name, inputs in WORKFLOWS:
-        run_workflow(wf_name, inputs)
-
-
-if __name__ == "__main__":
-    run_all()
+    logger.info(f"Running workflow {wf_case.workflow.name} at: {url}")
+    execution = remote.wait(execution)
+    assert execution.closure.phase == SUCCEED_STATUS

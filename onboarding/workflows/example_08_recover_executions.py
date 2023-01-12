@@ -20,6 +20,9 @@ from workflows.example_06_reproducibility import (
 from workflows.example_07_caching import get_data, split_data
 
 
+FAILURE_RATE = 0.25
+
+
 @task(cache=True, cache_version="1", retries=3)
 def train_model(
     data: pd.DataFrame, hyperparameters: Hyperparameters
@@ -35,7 +38,7 @@ def train_model(
 
     # simulate system-level error: per trail, introduce
     # a chance of failure 25% of the time
-    if random() < 0.25:
+    if random() < FAILURE_RATE:
         raise FlyteRecoverableException(
             f"🔥 Something went wrong with hyperparameters {hyperparameters}! 🔥"
         )

@@ -22,6 +22,8 @@ from workflows.example_06_reproducibility import (
     TARGET,
 )
 
+FAILURE_RATE = 0.05
+
 
 def get_previous_checkpoint(
     hyperparameters: Hyperparameters,
@@ -63,7 +65,7 @@ def train_model(
 
         # simulate system-level error: per epoch, introduce
         # a chance of failure 5% of the time
-        if random() < 0.05:
+        if random() < FAILURE_RATE:
             raise FlyteRecoverableException(
                 f"🔥 Something went wrong at epoch {epoch}! 🔥"
             )
