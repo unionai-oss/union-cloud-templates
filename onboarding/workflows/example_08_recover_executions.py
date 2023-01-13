@@ -23,7 +23,7 @@ from workflows.example_07_caching import get_data, split_data
 FAILURE_RATE = 0.25
 
 
-@task(cache=True, cache_version="1", retries=3)
+@task(cache=True, cache_version="2", retries=3)
 def train_model(
     data: pd.DataFrame, hyperparameters: Hyperparameters
 ) -> SGDClassifier:

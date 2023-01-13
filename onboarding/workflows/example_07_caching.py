@@ -32,7 +32,7 @@ def get_data() -> CachedDataFrame:
     return load_penguins()[[TARGET] + FEATURES].dropna()
 
 
-@task(cache=True, cache_version="1")
+@task(cache=True, cache_version="2")
 def split_data(
     data: pd.DataFrame, test_size: float, random_state: int
 ) -> Tuple[CachedDataFrame, CachedDataFrame]:
@@ -43,7 +43,7 @@ def split_data(
 
 @task(
     cache=True,
-    cache_version="1",
+    cache_version="2",
     retries=3,
     requests=Resources(cpu="2", mem="1Gi"),
     limits=Resources(cpu="2", mem="1Gi"),
