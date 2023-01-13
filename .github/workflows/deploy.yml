@@ -42,17 +42,19 @@ jobs:
           curl -sL https://raw.githubusercontent.com/unionai/uctl/main/install.sh | bash
           bin/uctl config init --host ${{ secrets.UNIONAI_ONBOARDING_HOST }}
 
-      - name: Package & Register
+      - name: Package
+        working-directory: ./${{ env.PROJECT }}
         run: |
-          cd ${{ env.PROJECT }}
-
           pyflyte --pkgs workflows package \
             --output ./flyte-package.tgz \
             --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-latest
 
-          ../bin/uctl --config ~/.uctl/config.yaml \
+      - name: Register
+        working-directory: ./${{ env.PROJECT }}
+        run: 
+          bin/uctl --config ~/.uctl/config.yaml \
             register files \
             --project onboarding \
             --domain production \
-            --archive ./flyte-package.tgz \
+            --archive ./${{ env.PROJECT }}/flyte-package.tgz \
             --version ${{ github.sha }}
