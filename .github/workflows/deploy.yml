@@ -40,7 +40,6 @@ jobs:
       - name: Setup uctl
         run: |
           curl -sL https://raw.githubusercontent.com/unionai/uctl/main/install.sh | bash
-          bin/uctl config init --host ${{ secrets.UNIONAI_ONBOARDING_HOST }}
 
       - name: Package
         working-directory: ./${{ env.PROJECT }}
@@ -51,13 +50,9 @@ jobs:
 
       - name: Register
         env:
-          FLYTE_CREDENTIALS_CLIENT_ID: ${{ secrets.UNIONAI_APP_CLIENT_ID }}
-          FLYTE_CREDENTIALS_CLIENT_SECRET: ${{ secrets.UNIONAI_APP_CLIENT_SECRET }}
-          FLYTE_CREDENTIALS_AUTH_MODE: basic
-          FLYTE_CREDENTIALS_AUTHORIZATION_METADATA_KEY: flyte-authorization
-          FLYTE_CREDENTIALS_OAUTH_SCOPES: all
+          UNIONAI_APP_CLIENT_SECRET: ${{ secrets.UNIONAI_APP_CLIENT_SECRET }}
         run: |
-          bin/uctl --config ~/.uctl/config.yaml \
+          bin/uctl --config ./ci-config.yaml \
             register files \
             --project onboarding \
             --domain production \
