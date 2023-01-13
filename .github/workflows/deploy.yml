@@ -20,17 +20,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # - name: Build & Push Docker Image to Github Registry
-      #   uses: whoan/docker-build-with-cache-action@v5
-      #   with:
-      #     # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
-      #     username: ${{ secrets.UNIONAI_OSS_BOT_USERNAME }}
-      #     password: ${{ secrets.UNIONAI_OSS_BOT_PASSWORD }}
-      #     image_name: ${{ github.repository }}
-      #     image_tag: ${{ env.PROJECT }}-${{ github.sha }},${{ env.PROJECT }}-latest
-      #     registry: ${{ env.REGISTRY }}
-      #     context: ./${{ env.PROJECT }}
-      #     dockerfile: Dockerfile
+      - name: Build & Push Docker Image to Github Registry
+        uses: whoan/docker-build-with-cache-action@v5
+        with:
+          # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
+          username: ${{ secrets.UNIONAI_OSS_BOT_USERNAME }}
+          password: ${{ secrets.UNIONAI_OSS_BOT_PASSWORD }}
+          image_name: ${{ github.repository }}
+          image_tag: ${{ env.PROJECT }}-${{ github.sha }},${{ env.PROJECT }}-latest
+          registry: ${{ env.REGISTRY }}
+          context: ./${{ env.PROJECT }}
+          dockerfile: Dockerfile
 
       - name: Setup flytekit
         run: |
