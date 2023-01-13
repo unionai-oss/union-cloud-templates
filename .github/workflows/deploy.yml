@@ -44,6 +44,7 @@ jobs:
 
       - name: Package
         run: |
+          cd ${{ env.PROJECT }}
           pyflyte --pkgs workflows package \
             --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-${{ github.sha }}
 
