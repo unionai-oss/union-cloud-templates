@@ -37,4 +37,4 @@ jobs:
           image_tag: ${{ env.PROJECT }}-${{ github.sha }},${{ env.PROJECT }}-latest
           registry: ${{ env.PROJECT }}
           context: ./${{ env.PROJECT }}
-          dockerfile: ./${{ env.PROJECT }}/Dockerfile
+          dockerfile: Dockerfile
