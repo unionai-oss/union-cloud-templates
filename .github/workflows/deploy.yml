@@ -32,6 +32,11 @@ jobs:
           context: ./${{ env.PROJECT }}
           dockerfile: Dockerfile
 
+      - name: Install Flytekit
+        run: |
+          sudo apt-get install python3
+          pip install flytekit
+
       - name: Setup uctl
         run: |
           curl -sL https://raw.githubusercontent.com/unionai/uctl/main/install.sh | bash
