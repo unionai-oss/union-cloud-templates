@@ -7,7 +7,7 @@ def get_remote(local=None, config_file=None):
     return FlyteRemote(
         config=Config.auto(
             config_file=(
-                None if not local
+                None if local
                 else config_file if config_file is not None
                 else str(Path.home() / ".uctl" / "config.yaml")
             )

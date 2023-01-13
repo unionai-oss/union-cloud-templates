@@ -49,12 +49,20 @@ pip install -e .
 
 ### Union Cloud Setup
 
+First install the [`uctl` CLI tool](https://docs.union.ai/lPDZGfbii3Fs3osZsWrA/guides/set-up-uctl-to-interact-with-union-cloud).
+
 These instructions are for setting up a project and registering workflows on
 a playground cluster, which assumes that docker images are publis
 
+Initialize the config file:
+
+```bash
+~bin/uctl config init --host <host_url>
+```
+
 Create a new project:
 
-```
+```bash
 ~/bin/uctl create project \
     --id "onboarding" \
     --labels "my-label=onboarding" \
@@ -75,13 +83,33 @@ docker push <tag>
 | The default docker container in the [github repo packages](https://github.com/unionai-oss/union-cloud-templates/pkgs/container/union-cloud-templates) section is set to publicly visible. |
 
 
-Register the workflows:
+Fast register workflows for prototyping:
 
 ```bash
 pyflyte --config ~/.uctl/config.yaml \
     register workflows \
     --project onboarding \
     --image ghcr.io/unionai-oss/union-cloud-templates:onboarding-latest
+```
+
+To register for production, first package your workflows with `pyflyte package`:
+
+```bash
+pyflyte \
+    --pkgs workflows \
+    package \
+    --image ghcr.io/unionai-oss/union-cloud-templates:onboarding-latest
+```
+
+Then register with `uctl`:
+
+```bash
+~/bin/uctl --config ~/.uctl/config.yaml \
+    register files \
+    --project onboarding \
+    --domain development \
+    --archive flyte-package.tgz \
+    --version <version>
 ```
 
 
