@@ -50,8 +50,9 @@ jobs:
             --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-latest
 
       - name: Register
-        run: 
-          bin/uctl --config ~/.uctl/config.yaml register files \
+        run: |
+          bin/uctl --config ~/.uctl/config.yaml \
+            register files \
             --project onboarding \
             --domain production \
             --archive ./${{ env.PROJECT }}/flyte-package.tgz \
