@@ -6,6 +6,7 @@ on:
       - main
 
 env:
+  REGISTRY: ghcr.io
   PROJECT: onboarding
 
 jobs:
@@ -33,7 +34,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           image_name: ${{ github.repository_owner }}/${{ github.repository }}
-          image_tag: onboarding-${{ github.sha }},onboarding-latest
-          registry: ghcr.io
+          image_tag: ${{ env.PROJECT }}-${{ github.sha }},${{ env.PROJECT }}-latest
+          registry: ${{ env.PROJECT }}
           context: ./${{ env.PROJECT }}
           dockerfile: ./${{ env.PROJECT }}/Dockerfile
