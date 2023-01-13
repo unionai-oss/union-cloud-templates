@@ -50,7 +50,6 @@ jobs:
             --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-latest
 
       - name: Register
-        working-directory: ./${{ env.PROJECT }}
         run: 
           bin/uctl --config ~/.uctl/config.yaml \
             register files \
