@@ -6,6 +6,7 @@ ENV VENV /opt/venv
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV PYTHONPATH /root
+ENV GIT_PYTHON_REFRESH quiet
 
 RUN apt-get update && apt-get install -y build-essential
 RUN pip3 install awscli

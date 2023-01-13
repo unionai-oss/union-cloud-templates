@@ -1,0 +1,39 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT: onboarding
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Log in to Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Docker Image to Github Registry
+        uses: whoan/docker-build-with-cache-action@v5
+        with:
+          # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          image_name: ${{ github.repository_owner }}/${{ github.repository }}
+          image_tag: onboarding-${{ github.sha }},onboarding-latest
+          registry: ghcr.io
+          context: ./${{ env.PROJECT }}
+          dockerfile: ./${{ env.PROJECT }}/Dockerfile

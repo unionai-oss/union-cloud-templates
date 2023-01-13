@@ -98,6 +98,7 @@ To register for production, first package your workflows with `pyflyte package`:
 pyflyte \
     --pkgs workflows \
     package \
+    --force \
     --image ghcr.io/unionai-oss/union-cloud-templates:onboarding-latest
 ```
 
