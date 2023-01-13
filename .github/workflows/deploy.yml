@@ -53,6 +53,9 @@ jobs:
         env:
           FLYTE_CREDENTIALS_CLIENT_ID: ${{ secrets.UNIONAI_APP_CLIENT_ID }}
           FLYTE_CREDENTIALS_CLIENT_SECRET: ${{ secrets.UNIONAI_APP_CLIENT_SECRET }}
+          FLYTE_CREDENTIALS_AUTH_MODE: basic
+          FLYTE_CREDENTIALS_AUTHORIZATION_METADATA_KEY: flyte-authorization
+          FLYTE_CREDENTIALS_OAUTH_SCOPES: all
         run: |
           bin/uctl --config ~/.uctl/config.yaml \
             register files \
