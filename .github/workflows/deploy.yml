@@ -20,17 +20,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build & Push Docker Image to Github Registry
-        uses: whoan/docker-build-with-cache-action@v5
-        with:
-          # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
-          username: ${{ secrets.UNIONAI_OSS_BOT_USERNAME }}
-          password: ${{ secrets.UNIONAI_OSS_BOT_PASSWORD }}
-          image_name: ${{ github.repository }}
-          image_tag: ${{ env.PROJECT }}-${{ github.sha }},${{ env.PROJECT }}-latest
-          registry: ${{ env.REGISTRY }}
-          context: ./${{ env.PROJECT }}
-          dockerfile: Dockerfile
+      # - name: Build & Push Docker Image to Github Registry
+      #   uses: whoan/docker-build-with-cache-action@v5
+      #   with:
+      #     # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
+      #     username: ${{ secrets.UNIONAI_OSS_BOT_USERNAME }}
+      #     password: ${{ secrets.UNIONAI_OSS_BOT_PASSWORD }}
+      #     image_name: ${{ github.repository }}
+      #     image_tag: ${{ env.PROJECT }}-${{ github.sha }},${{ env.PROJECT }}-latest
+      #     registry: ${{ env.REGISTRY }}
+      #     context: ./${{ env.PROJECT }}
+      #     dockerfile: Dockerfile
 
       - name: Setup flytekit
         run: |
@@ -40,7 +40,7 @@ jobs:
       - name: Setup uctl
         run: |
           curl -sL https://raw.githubusercontent.com/unionai/uctl/main/install.sh | bash
-          ~/bin/uctl config init --host ${{ secrets.UNIONAI_ONBOARDING_HOST }}
+          bin/uctl config init --host ${{ secrets.UNIONAI_ONBOARDING_HOST }}
 
       - name: Package & Register
         run: |
@@ -48,9 +48,9 @@ jobs:
 
           pyflyte --pkgs workflows package \
             --output ./flyte-package.tgz \
-            --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-${{ github.sha }}
+            --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-latest
 
-          ~/bin/uctl --config ~/.uctl/config.yaml \
+          ../bin/uctl --config ~/.uctl/config.yaml \
             register files \
             --project onboarding \
             --domain production \
