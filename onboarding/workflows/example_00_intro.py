@@ -51,7 +51,9 @@ def split_data(
     data: pd.DataFrame, test_size: float, random_state: int
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     return train_test_split(
-        data, test_size=test_size, random_state=random_state
+        data,
+        test_size=test_size,
+        random_state=random_state,
     )
 
 

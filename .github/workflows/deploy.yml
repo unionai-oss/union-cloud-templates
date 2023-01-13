@@ -32,10 +32,10 @@ jobs:
           context: ./${{ env.PROJECT }}
           dockerfile: Dockerfile
 
-      - name: Install Flytekit
+      - name: Setup flytekit
         run: |
           sudo apt-get install python3
-          pip install flytekit
+          pip install -r ${{ env.PROJECT }}/requirements.txt
 
       - name: Setup uctl
         run: |

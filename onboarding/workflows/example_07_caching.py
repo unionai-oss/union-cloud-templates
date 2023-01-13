@@ -34,7 +34,7 @@ def get_data() -> CachedDataFrame:
 
 @task(cache=True, cache_version="2")
 def split_data(
-    data: pd.DataFrame, test_size: float, random_state: int
+    data: CachedDataFrame, test_size: float, random_state: int
 ) -> Tuple[CachedDataFrame, CachedDataFrame]:
     return train_test_split(
         data, test_size=test_size, random_state=random_state
