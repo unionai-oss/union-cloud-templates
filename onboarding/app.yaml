@@ -1,0 +1,11 @@
+ clientId: ucloud-onboarding-operator
+ clientName: ucloud onboarding operator
+ grantTypes:
+   - CLIENT_CREDENTIALS
+   - AUTHORIZATION_CODE
+ redirectUris:
+   - http://localhost:8080/authorization-code/callback
+ responseTypes:
+   - CODE
+ tokenEndpointAuthMethod: CLIENT_SECRET_BASIC
+ 

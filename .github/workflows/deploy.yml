@@ -50,6 +50,9 @@ jobs:
             --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-latest
 
       - name: Register
+        env:
+          FLYTE_CREDENTIALS_CLIENT_ID: ${{ secrets.UNIONAI_APP_CLIENT_ID }}
+          FLYTE_CREDENTIALS_CLIENT_SECRET: ${{ secrets.UNIONAI_APP_CLIENT_SECRET }}
         run: |
           bin/uctl --config ~/.uctl/config.yaml \
             register files \
