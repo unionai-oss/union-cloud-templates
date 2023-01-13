@@ -47,7 +47,7 @@ jobs:
           cd ${{ env.PROJECT }}
 
           pyflyte --pkgs workflows package \
-            --output ./flyte-package.tgz
+            --output ./flyte-package.tgz \
             --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-${{ github.sha }}
 
           bin/uctl --config ~/.uctl/config.yaml \
