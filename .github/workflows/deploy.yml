@@ -10,7 +10,7 @@ env:
   PROJECT: onboarding
 
 jobs:
-  build:
+  build_and_register:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -19,13 +19,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
-      # - name: Log in to Container registry
-      #   uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-      #   with:
-      #     registry: ${{ env.REGISTRY }}
-      #     username: ${{ secrets.UNIONAI_OSS_BOT_USERNAME }}
-      #     password: ${{ secrets.UNIONAI_OSS_BOT_PASSWORD }}
 
       - name: Build & Push Docker Image to Github Registry
         uses: whoan/docker-build-with-cache-action@v5
@@ -38,3 +31,22 @@ jobs:
           registry: ${{ env.REGISTRY }}
           context: ./${{ env.PROJECT }}
           dockerfile: Dockerfile
+
+      - name: Setup uctl
+        run: |
+          curl -sL https://raw.githubusercontent.com/unionai/uctl/main/install.sh | bash
+          bin/uctl config init --host ${{ secrets.UNIONAI_ONBOARDING_HOST }}
+
+      - name: Package
+        run: |
+          pyflyte --pkgs workflows package \
+            --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-${{ github.sha }}
+
+      - name: Register
+        run: |
+          bin/uctl --config ~/.uctl/config.yaml \
+            register files \
+            --project onboarding \
+            --domain production \
+            --archive flyte-package.tgz \
+            --version ${{ github.sha }}
