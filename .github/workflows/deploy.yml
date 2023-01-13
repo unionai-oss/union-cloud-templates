@@ -51,8 +51,7 @@ jobs:
 
       - name: Register
         run: 
-          bin/uctl --config ~/.uctl/config.yaml \
-            register files \
+          bin/uctl --config ~/.uctl/config.yaml register files \
             --project onboarding \
             --domain production \
             --archive ./${{ env.PROJECT }}/flyte-package.tgz \
