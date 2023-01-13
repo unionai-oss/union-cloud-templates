@@ -40,7 +40,7 @@ jobs:
       - name: Setup uctl
         run: |
           curl -sL https://raw.githubusercontent.com/unionai/uctl/main/install.sh | bash
-          bin/uctl config init --host ${{ secrets.UNIONAI_ONBOARDING_HOST }}
+          ~/bin/uctl config init --host ${{ secrets.UNIONAI_ONBOARDING_HOST }}
 
       - name: Package & Register
         run: |
@@ -50,7 +50,7 @@ jobs:
             --output ./flyte-package.tgz \
             --image ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.PROJECT }}-${{ github.sha }}
 
-          bin/uctl --config ~/.uctl/config.yaml \
+          ~/bin/uctl --config ~/.uctl/config.yaml \
             register files \
             --project onboarding \
             --domain production \
