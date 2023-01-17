@@ -7,6 +7,9 @@ Using the pypi package:
 https://pypi.org/project/palmerpenguins/
 """
 
+# Note for demo:
+# pyflyte -c ~/.flyte/config-sandbox.yaml register --image localhost:30000/onboarding:v0.1 --version gatetst-v2 workflows/example_00_intro.py
+
 from dataclasses import dataclass, asdict
 from typing import Optional, Tuple
 
@@ -41,7 +44,7 @@ class Hyperparameters:
     max_iter: Optional[int]
 
 
-@task
+@task(disable_deck=False)
 def get_data() -> pd.DataFrame:
     return load_penguins()[[TARGET] + FEATURES].dropna()
 
