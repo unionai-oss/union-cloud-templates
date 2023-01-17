@@ -12,6 +12,7 @@ https://pypi.org/project/palmerpenguins/
 
 from dataclasses import dataclass, asdict
 from typing import Optional, Tuple
+from datetime import timedelta
 
 import pandas as pd
 from dataclasses_json import dataclass_json
@@ -20,7 +21,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 
-from flytekit import task, workflow, LaunchPlan, CronSchedule
+from flytekit import task, workflow, LaunchPlan, CronSchedule, approve
 
 try:
     from workflows import logger
@@ -83,8 +84,9 @@ def training_workflow(
 ) -> Tuple[LogisticRegression, float, float]:
     # get and split data
     data = get_data()
+    approved_data = approve(data, "approve-data", timeout=timedelta(hours=1))
     train_data, test_data = split_data(
-        data=data, test_size=test_size, random_state=random_state
+        data=approved_data, test_size=test_size, random_state=random_state
     )
 
     # train model on the training set
