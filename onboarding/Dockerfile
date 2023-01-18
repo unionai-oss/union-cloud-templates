@@ -1,6 +1,10 @@
 # 🐳📦 Docker containers unlock OS-level reproducibility 🔄
-# docker build -t localhost:30000/onboarding:v0.1 .
-# localhost:30000 is the registry that comes with flytectl demo start, you'll have to push after building
+# docker buildx create --name bbb --driver docker-container --driver-opt image=moby/buildkit:master \
+#   --buildkitd-flags '--allow-insecure-entitlement security.insecure' --platform linux/arm64,linux/amd64
+# docker buildx build --builder bbb --allow security.insecure --platform linux/arm64,linux/amd64 \
+#   --push -t ghcr.io/unionai-oss/union-cloud-templates:yt-v0.2 .
+# Can also use -t localhost:30000/cloud-templates:v0.1 if you want to use the registry that comes with flytectl demo
+#   You'll need to push to localhost:30000 after building.
 FROM python:3.9-slim-buster
 
 WORKDIR /root
