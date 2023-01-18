@@ -76,6 +76,11 @@ def evaluate(model: LogisticRegression, data: pd.DataFrame) -> float:
     return float(accuracy_score(data[TARGET], model.predict(data[FEATURES])))
 
 
+@task
+def deploy(model: LogisticRegression):
+    print(f"Deploying model {model}")
+
+
 @workflow
 def training_workflow(
     hyperparameters: Hyperparameters,
@@ -84,9 +89,8 @@ def training_workflow(
 ) -> Tuple[LogisticRegression, float, float]:
     # get and split data
     data = get_data()
-    approved_data = approve(data, "approve-data", timeout=timedelta(hours=1))
     train_data, test_data = split_data(
-        data=approved_data, test_size=test_size, random_state=random_state
+        data=data, test_size=test_size, random_state=random_state
     )
 
     # train model on the training set
@@ -96,6 +100,9 @@ def training_workflow(
     train_acc = evaluate(model=model, data=train_data)
     test_acc = evaluate(model=model, data=test_data)
 
+    approve_model = approve(test_acc, "approve-test-acc", timeout=timedelta(hours=1))
+    dep = deploy(model=model)
+    approve_model >> dep
     # return model with results
     return model, train_acc, test_acc
 
