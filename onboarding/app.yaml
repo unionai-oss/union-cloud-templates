@@ -1,5 +1,5 @@
- clientId: ucloud-onboarding-operator
- clientName: ucloud onboarding operator
+ clientId: <org>-onboarding-operator
+ clientName: <org> onboarding operator
  grantTypes:
    - CLIENT_CREDENTIALS
    - AUTHORIZATION_CODE
@@ -8,4 +8,3 @@
  responseTypes:
    - CODE
  tokenEndpointAuthMethod: CLIENT_SECRET_BASIC
- 

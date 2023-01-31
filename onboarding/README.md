@@ -57,7 +57,7 @@ a playground cluster, which assumes that docker images are publis
 Initialize the config file:
 
 ```bash
-~bin/uctl config init --host <host_url>
+~/bin/uctl config init --host <host_url>
 ```
 
 Create a new project:
