@@ -17,7 +17,7 @@ do
         v) VERSION=${OPTARG};;
         h) echo "Usage: ${0} [-h|[-p <project_name>][-r <registry_name>][-v <version>]]"
            echo "  h: help (this message)"
-           echo "  a: APP_NAME or the REPOSITORY APP_NAME. Defaults to union-cloud-templates."
+           echo "  p: PROJECT_NAME. Defaults to 'onboarding'."
            echo "  r = REGISTRY name where the docker container should be pushed. Defaults to none - localhost"
            echo "  v = VERSION of the build. Defaults to using the current git head SHA"
            exit 1;;
