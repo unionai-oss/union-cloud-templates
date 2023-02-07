@@ -28,6 +28,9 @@ remote = FlyteRemote(
     default_domain="development",
 )
 
+# grab a workflow, just to authenticate to the Flyte backend
+remote.fetch_workflow(name=WORKFLOW_CASES[0].workflow.name)
+
 
 @pytest.mark.parametrize("wf_case", WORKFLOW_CASES)
 def test_workflow_remote(wf_case: WorkflowCase):
