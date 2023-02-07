@@ -6,6 +6,7 @@ NOTE: This script assumes that:
 """
 
 import logging
+import time
 
 from flytekit.remote import FlyteRemote
 from flytekit.configuration import Config
@@ -28,13 +29,18 @@ remote = FlyteRemote(
     default_domain="development",
 )
 
-# grab a workflow, just to authenticate to the Flyte backend
-remote.fetch_workflow(name=WORKFLOW_CASES[0].workflow.name)
-
 
 @pytest.mark.parametrize("wf_case", WORKFLOW_CASES)
 def test_workflow_remote(wf_case: WorkflowCase):
-    flyte_wf = remote.fetch_workflow(name=wf_case.workflow.name)
+    for _ in range(60):
+        # bypass issue where multiple remote objects are authenticating at the
+        # same time.
+        try:
+            flyte_wf = remote.fetch_workflow(name=wf_case.workflow.name)
+            break
+        except OSError:
+            time.sleep(1)
+
     execution = remote.execute(flyte_wf, inputs=wf_case.inputs)
     url = remote.generate_console_url(execution)
     logger.info(f"Running workflow {wf_case.workflow.name} at: {url}")
