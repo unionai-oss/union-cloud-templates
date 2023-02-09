@@ -3,15 +3,16 @@
 from dataclasses import asdict
 from typing import Annotated, List, Tuple
 
+import numpy as np
 import pandas as pd
 from palmerpenguins import load_penguins
 from sklearn.linear_model import SGDClassifier
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from flytekit import task, workflow, dynamic, HashMethod, Resources
 
 
-from workflows.example_01_dynamic import get_best_model
 from workflows.example_06_reproducibility import (
     get_data,
     Hyperparameters,
@@ -55,6 +56,21 @@ def train_model(
     return SGDClassifier(**asdict(hyperparameters)).fit(
         data[FEATURES], data[TARGET]
     )
+
+@task
+def get_best_model(
+    models: List[SGDClassifier], val_data: pd.DataFrame
+) -> Tuple[SGDClassifier, float]:
+    """
+    🔻 We implement a "reduce" function that takes the results from the dynamic
+    model tuning workflow to find the best model.
+    """
+    scores = [
+        accuracy_score(val_data[TARGET], model.predict(val_data[FEATURES]))
+        for model in models
+    ]
+    best_index = np.array(scores).argmax()
+    return models[best_index], float(scores[best_index])
 
 
 @dynamic

@@ -11,7 +11,7 @@ from sklearn.linear_model import SGDClassifier
 from flytekit import task, workflow, dynamic
 from flytekit.exceptions.user import FlyteRecoverableException
 
-from workflows.example_01_dynamic import get_best_model
+from workflows.example_07_caching import get_best_model
 from workflows.example_06_reproducibility import (
     Hyperparameters,
     FEATURES,

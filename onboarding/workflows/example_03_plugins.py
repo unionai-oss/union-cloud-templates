@@ -15,7 +15,6 @@ from flytekit import kwtypes, task, workflow, Resources
 from flytekit.extras.sqlite3.task import SQLite3Config, SQLite3Task
 from flytekitplugins.spark import Spark
 
-
 from workflows.example_00_intro import FEATURES, TARGET
 
 
@@ -106,10 +105,21 @@ def preprocess_data_pyspark(
     ...  # pyspark code
 
 
-RESOURCES = Resources(cpu="2", mem="1Gi")
+try:
+    from flytekitplugins.kfpytorch import PyTorch
+
+    training_config = PyTorch(num_workers=2)
+    training_resources = Resources(cpu="2", mem="1Gi", gpu="1")
+except ImportError:
+    training_config = None
+    training_resources = Resources(cpu="2", mem="1Gi")
 
 
-@task(requests=RESOURCES, limits=RESOURCES)
+@task(
+    task_config=training_config,
+    requests=training_resources,
+    limits=training_resources,
+)
 def train_model(
     data: PenquinsDataset, n_epochs: int, hyperparameters: Hyperparameters
 ) -> nn.Sequential:
