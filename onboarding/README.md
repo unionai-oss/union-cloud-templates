@@ -3,8 +3,7 @@
 This project contains a template Flyte project that can be used out-of-the-box
 with a Flyte cluster hosted on [Union Cloud](https://www.union.ai/cloud).
 
-This project template serves as a beginner-level entrypoint to learning how
-to:
+This project template serves as a beginner-level entrypoint to learning how to:
 
 1. Develop workflows in Flyte locally.
 2. Deploy them to a Union-Cloud-hosted Flyte cluster.
