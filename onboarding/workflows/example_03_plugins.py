@@ -9,6 +9,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from dataclasses_json import dataclass_json
+from torch import distributed as dist
 
 from flytekit.types.structured import StructuredDataset
 from flytekit import kwtypes, task, workflow, Resources
@@ -25,6 +26,7 @@ class Hyperparameters:
     hidden_dim: int
     out_dim: int
     learning_rate: float
+    backend: str = dist.Backend.GLOO
 
 
 PenquinsDataset = Annotated[
@@ -108,9 +110,11 @@ def preprocess_data_pyspark(
 try:
     from flytekitplugins.kfpytorch import PyTorch
 
-    training_config = PyTorch(num_workers=2)
+    worldsize = 2
+    training_config = PyTorch(num_workers=worldsize)
     training_resources = Resources(cpu="2", mem="1Gi", gpu="1")
 except ImportError:
+    worldsize = 1
     training_config = None
     training_resources = Resources(cpu="2", mem="1Gi")
 
@@ -134,6 +138,13 @@ def train_model(
     - Pandera type
     - ONNX type
     """
+    use_cuda = torch.cuda.is_available()
+    device = torch.device("cuda" if use_cuda else "cpu")
+
+    if dist.is_available() and worldsize > 1:
+        print("Using distributed PyTorch with {} backend".format(hyperparameters.backend))
+        dist.init_process_group(backend=hyperparameters.backend)
+
     # extract features and targets
     data = data.open(pd.DataFrame).all()
     features = torch.from_numpy(data[FEATURES].values).float()
@@ -145,7 +156,16 @@ def train_model(
         nn.ReLU(),
         nn.Linear(hyperparameters.hidden_dim, hyperparameters.out_dim),
         nn.Softmax(dim=1),
-    )
+    ).to(device)
+
+    if dist.is_available() and dist.is_initialized():
+        Distributor = (
+            nn.parallel.DistributedDataParallel
+            if use_cuda
+            else nn.parallel.DistributedDataParallelCPU
+        )
+        model = Distributor(model)
+
     opt = torch.optim.Adam(
         model.parameters(), lr=hyperparameters.learning_rate
     )
