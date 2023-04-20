@@ -28,7 +28,7 @@ def hash_pandas_dataframe(df: pd.DataFrame) -> str:
 CachedDataFrame = Annotated[pd.DataFrame, HashMethod(hash_pandas_dataframe)]
 
 
-@task
+@task(requests=Resources(ephemeral_storage="3Gi"))
 def get_data() -> CachedDataFrame:
     return load_penguins()[[TARGET] + FEATURES].dropna()
 
