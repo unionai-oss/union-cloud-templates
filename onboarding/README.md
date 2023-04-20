@@ -85,9 +85,9 @@ docker push <tag>
 Fast register workflows for prototyping:
 
 ```
-pyflyte --config ~/.flyte/uniondemo-config.yaml \
+pyflyte --config ~/.flyte/config.yaml \
     register workflows \
-    --project flytesnacks \
+    --project onboarding \
     --image ghcr.io/unionai-oss/union-cloud-templates:onboarding-latest
 ```
 
