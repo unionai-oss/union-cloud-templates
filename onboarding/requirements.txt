@@ -2,6 +2,7 @@ flytekit>=1.1.0
 flytekitplugins-deck-standard
 flytekitplugins-pandera
 flytekitplugins-spark
+flytekitplugins-whylogs
 ipykernel
 joblib
 modin
@@ -10,3 +11,4 @@ pandas
 pyspark
 scikit-learn
 torch
+whylogs
