@@ -16,7 +16,7 @@ The high-level structure of this project is as follows:
 ├── Dockerfile               # Docker image for the project
 ├── LICENSE
 ├── README.md
-├── docker_build_and_tag.sh  # convenience script to build docker image
+├── docker_build.sh  # convenience script to build docker image
 ├── requirements.txt         # project requirements
 ├── setup.py                 # project package spec
 ├── tutorial.ipynb           # hands-on tutorial
